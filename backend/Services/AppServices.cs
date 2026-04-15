@@ -62,6 +62,10 @@ public class ProjectService(AppDbContext db) : IProjectService
 
         foreach (var project in projects)
         {
+            project.TaskCount = summaryRows
+                .Where(x => x.ProjectId == project.Id)
+                .Sum(x => x.Count);
+
             project.TaskStatusSummary = summaryRows
                 .Where(x => x.ProjectId == project.Id)
                 .ToDictionary(x => x.Status, x => x.Count);
@@ -90,6 +94,8 @@ public class ProjectService(AppDbContext db) : IProjectService
             .GroupBy(t => t.Status)
             .Select(g => new { g.Key, Count = g.Count() })
             .ToDictionaryAsync(x => x.Key, x => x.Count);
+
+        project.TaskCount = project.TaskStatusSummary.Values.Sum();
 
         project.Tasks = await db.Tasks
             .Where(t => t.ProjectId == id)

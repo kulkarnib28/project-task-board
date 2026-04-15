@@ -27,6 +27,7 @@ public class ProjectDto
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int TaskCount { get; set; }
     public Dictionary<TaskStatusEnum, int> TaskStatusSummary { get; set; } = new();
     public List<TaskDto> Tasks { get; set; } = new();
 }

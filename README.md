@@ -1,41 +1,131 @@
 # Project Task Board
 
-Full-stack task management app built with React, ASP.NET Core Web API, SQLite, and Entity Framework Core.
+A full-stack task management application built for the Junior Full-Stack Developer take-home assignment.
 
-## Features
-
-- Manage projects (create, list, update, delete)
-- Manage tasks under each project
-- Task filtering (status/priority), sorting, and pagination
-- Task comments (add/delete)
-- Dashboard statistics:
-  - Total projects
-  - Total tasks
-  - Tasks by status
-  - Overdue tasks
-  - Tasks due in next 7 days
-- Global exception handling and structured validation responses
-- Seed data and automatic timestamps via `SaveChangesAsync`
+Users can:
+- Organize tasks under projects
+- Track progress through statuses
+- Add comments to tasks
 
 ## Tech Stack
 
-- Frontend: React + Hooks + React Router + Axios
+- Frontend: React, React Router, Axios
 - Backend: ASP.NET Core Web API (.NET 10)
-- DB: SQLite
-- ORM: Entity Framework Core
+- Database: SQLite
+- ORM: Entity Framework Core + migrations
+
+## Implemented Requirements
+
+### Data Model
+
+- `Project`: `Id`, `Name` (unique), `Description`, `CreatedAt`
+- `Task`: `Id`, `ProjectId`, `Title`, `Description`, `Priority`, `Status`, `DueDate`, `CreatedAt`, `UpdatedAt`
+- `Comment`: `Id`, `TaskId`, `Author`, `Body`, `CreatedAt`
+
+### Relationships and Cascade Rules
+
+- `Project` -> many `Tasks`
+- `Task` -> one `Project`
+- `Task` -> many `Comments`
+- Delete `Project` -> deletes related `Tasks` and `Comments`
+- Delete `Task` -> deletes related `Comments`
+
+### API Endpoints
+
+#### Projects
+- `GET /api/projects` (includes per-project `taskCount` and status summary)
+- `POST /api/projects`
+- `GET /api/projects/{id}`
+- `PUT /api/projects/{id}`
+- `DELETE /api/projects/{id}`
+
+#### Tasks
+- `GET /api/projects/{projectId}/tasks`
+- `POST /api/projects/{projectId}/tasks`
+- `GET /api/tasks/{id}`
+- `PUT /api/tasks/{id}`
+- `DELETE /api/tasks/{id}`
+
+#### Comments
+- `GET /api/tasks/{taskId}/comments`
+- `POST /api/tasks/{taskId}/comments`
+- `DELETE /api/comments/{id}`
+
+#### Dashboard
+- `GET /api/dashboard`
+- Returns: total projects, total tasks, tasks by status, overdue tasks, tasks due within 7 days
+
+### Filtering, Sorting, Pagination
+
+Task list endpoint supports:
+- `status`
+- `priority`
+- `sortBy`: `dueDate`, `priority`, `createdAt`
+- `sortDir`: `asc`, `desc`
+- `page` (default `1`)
+- `pageSize` (default `10`, max `50`)
+
+Pagination response format:
+
+```json
+{
+  "data": [],
+  "page": 1,
+  "pageSize": 10,
+  "totalCount": 50,
+  "totalPages": 5
+}
+```
+
+### Validation and Error Handling
+
+- Status codes used: `200`, `201`, `400`, `404`, `409`, `500`
+- Structured model validation errors in JSON
+- Global exception middleware
+- No stack trace exposed in API responses
+
+### Persistence
+
+- SQLite database
+- EF Core migrations
+- At least one migration (`InitialCreate`)
+- Migrations auto-applied on startup
+- Seed data on first run
+- Auto timestamps handled in `SaveChangesAsync`
+
+## Frontend Views
+
+- Dashboard
+  - Total tasks/projects, status breakdown, overdue tasks, upcoming tasks
+- Project List
+  - Project cards with name, description, task summary
+- Task Board
+  - List/Kanban style board, filters, sorting, pagination, task preview
+- Task Detail
+  - Full task info, edit form, comments section
+- Add/Edit Forms
+  - Project form and task form with validation errors
+
+## Frontend Technical Notes
+
+- Functional components only
+- Hooks used: `useState`, `useEffect`, `useContext`
+- Custom hook: `useApi`
+- React Context: shared app refresh/theme state
+- React Router: `/dashboard`, `/projects`, `/projects/:id`, `/tasks/:id`
+- Loading and error handling across pages
+- Confirmation dialogs for destructive actions
 
 ## Project Structure
 
 ```text
-Project_Task/
+project-task-board/
 ├── backend/
 │   ├── Controllers/
 │   ├── Services/
 │   ├── Models/
 │   ├── DTOs/
 │   ├── Data/
-│   │   ├── AppDbContext.cs
-│   │   └── SeedData.cs
 │   ├── Middleware/
 │   ├── Migrations/
 │   └── Program.cs
@@ -49,90 +139,77 @@ Project_Task/
         └── App.jsx
 ```
 
-## Prerequisites
+## How to Run
 
-- .NET SDK (`10.x`)
+### Prerequisites
+
+- .NET SDK `10.x`
 - Node.js + npm
 
-## Backend Setup
+### 1) Start Backend
+
+From repository root:
 
 ```bash
-cd backend
-PATH="/opt/homebrew/bin:$PATH" /opt/homebrew/bin/dotnet restore
-PATH="/opt/homebrew/bin:$PATH" /opt/homebrew/bin/dotnet build
-PATH="/opt/homebrew/bin:$PATH" /opt/homebrew/bin/dotnet run
+dotnet run --project backend/backend.csproj
 ```
 
-Backend runs on:
-
+Backend URL:
 - `http://localhost:5062`
 
-Database migrations are automatically applied at startup, and seed data is inserted if database is empty.
+### 2) Start Frontend
 
-## Frontend Setup
+In a second terminal from repository root:
 
 ```bash
-cd frontend
-npm install
-npm run dev
+npm --prefix frontend install
+npm --prefix frontend run dev
 ```
 
-Frontend runs on:
-
+Frontend URL:
 - `http://localhost:5173`
 
-## Environment (Frontend)
+### Frontend Environment Variable (Optional)
 
-Optional `.env` in `frontend/`:
+Create `frontend/.env`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5062/api
 ```
 
-If not provided, frontend defaults to `http://localhost:5062/api`.
+If not set, frontend defaults to `http://localhost:5062/api`.
 
-## API Endpoints
+## Build Commands
 
-### Projects
+From repository root:
 
-- `GET /api/projects`
-- `POST /api/projects`
-- `GET /api/projects/{id}`
-- `PUT /api/projects/{id}`
-- `DELETE /api/projects/{id}`
-
-### Tasks
-
-- `GET /api/projects/{projectId}/tasks`
-- `POST /api/projects/{projectId}/tasks`
-- `GET /api/tasks/{id}`
-- `PUT /api/tasks/{id}`
-- `DELETE /api/tasks/{id}`
-
-### Comments
-
-- `GET /api/tasks/{taskId}/comments`
-- `POST /api/tasks/{taskId}/comments`
-- `DELETE /api/comments/{id}`
-
-### Dashboard
-
-- `GET /api/dashboard`
-
-## Pagination Format
-
-```json
-{
-  "data": [],
-  "page": 1,
-  "pageSize": 10,
-  "totalCount": 50,
-  "totalPages": 5
-}
+```bash
+dotnet build backend/backend.csproj
+npm --prefix frontend run build
 ```
 
-## Validation and Error Handling
+## Notes
 
-- Uses status codes: `200`, `201`, `400`, `404`, `409`, `500`
-- Structured validation responses for invalid model state
-- Global exception middleware prevents stack trace leaks in API responses
+- Build artifacts under `backend/bin` and `backend/obj` are generated files and should not be committed as source changes.
+
+## Frontend Screenshots
+
+### Dashboard
+![Dashboard - Light](<screenshots/Screenshot 2026-04-15 at 1.29.54 PM.png>)
+![Dashboard - Dark](<screenshots/Screenshot 2026-04-15 at 1.36.03 PM.png>)
+
+### Projects
+![Projects - Light](<screenshots/Screenshot 2026-04-15 at 1.36.33 PM.png>)
+![Projects - Dark](<screenshots/Screenshot 2026-04-15 at 1.36.55 PM.png>)
+
+### Task Board
+![Task Board - Light](<screenshots/Screenshot 2026-04-15 at 1.37.21 PM.png>)
+![Task Board - Dark](<screenshots/Screenshot 2026-04-15 at 1.37.45 PM.png>)
+![Task Board - Filters](<screenshots/Screenshot 2026-04-15 at 1.38.09 PM.png>)
+![Task Board - Kanban](<screenshots/Screenshot 2026-04-15 at 1.38.26 PM.png>)
+
+### Task Detail and Forms
+![Task Detail - Light](<screenshots/Screenshot 2026-04-15 at 1.38.48 PM.png>)
+![Task Detail - Dark](<screenshots/Screenshot 2026-04-15 at 1.39.05 PM.png>)
+![Create or Edit Form](<screenshots/Screenshot 2026-04-15 at 1.39.26 PM.png>)
+![Comments Section](<screenshots/Screenshot 2026-04-15 at 1.39.50 PM.png>)

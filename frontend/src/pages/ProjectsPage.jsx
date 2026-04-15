@@ -69,6 +69,7 @@ export function ProjectsPage() {
           <article key={p.id} className="card project-card">
             <h3>{p.name}</h3>
             <p>{p.description || 'No description'}</p>
+            <p><strong>Total tasks:</strong> {p.taskCount ?? 0}</p>
             <div className="status-grid">
               {statusOrder.map((status) => (
                 <div className="status-item" key={status}>
