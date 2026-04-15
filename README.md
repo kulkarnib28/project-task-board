@@ -7,6 +7,16 @@ Users can:
 - Track progress through statuses
 - Add comments to tasks
 
+## Core Features
+
+- Project CRUD with unique project names
+- Task CRUD under projects with priority, status, due date, and validations
+- Task comments (add/list/delete)
+- Dashboard metrics (totals, status breakdown, overdue, due in 7 days)
+- Filtering, sorting, and pagination for task listing
+- Light and dark theme UI
+- Global API exception handling with structured validation errors
+
 ## Tech Stack
 
 - Frontend: React, React Router, Axios
@@ -172,6 +182,24 @@ Note:
 - Migrations are auto-applied on startup via `db.Database.MigrateAsync()`.
 - Seed data is inserted on first run if no projects exist.
 
+## Exact Commands (Reviewer-Friendly)
+
+From repository root:
+
+```bash
+# Backend
+dotnet ef database update --project backend/backend.csproj
+dotnet run --project backend/backend.csproj
+
+# Frontend
+npm --prefix frontend install
+npm --prefix frontend run dev
+```
+
+Important:
+- This project uses Vite, so frontend start command is `npm run dev` (not `npm start`).
+- Seed data is automatically inserted on first run when database is empty.
+
 ### 1) Start Backend
 
 From repository root:
@@ -304,6 +332,23 @@ Expected validation response shape:
 | Hooks + Context + custom hook (`useApi`) | ✅ | Implemented across frontend pages/components |
 | Loading/error handling + confirmation dialogs | ✅ | Implemented in frontend views |
 | Multiple meaningful commits | ✅ | Structured commit history maintained |
+
+## Quick Requirement Verification
+
+- Filtering examples:
+  - `GET /api/projects/1/tasks?status=InProgress`
+  - `GET /api/projects/1/tasks?priority=High`
+- Sorting example:
+  - `GET /api/projects/1/tasks?sortBy=dueDate&sortDir=asc`
+- Pagination response fields included:
+  - `data`, `page`, `pageSize`, `totalCount`, `totalPages`
+- React technical requirements:
+  - Custom hook: `useApi` ✅
+  - React Context: `AppContext` ✅
+- Delete confirmation dialogs:
+  - Project delete, task delete, comment delete all use `window.confirm(...)` ✅
+- UI polish:
+  - Priority color badges, overdue highlighting, and clean spacing/layout ✅
 
 ## Notes
 
