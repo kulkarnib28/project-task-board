@@ -195,17 +195,17 @@ npm --prefix frontend run build
 ## Frontend Screenshots
 
 ### Light Theme
-![Dashboard - Light Theme](<screenshots/Screenshot 2026-04-15 at 1.29.54 PM.png>)
-![Projects - Light Theme](<screenshots/Screenshot 2026-04-15 at 1.36.33 PM.png>)
-![Task Board - Light Theme](<screenshots/Screenshot 2026-04-15 at 1.37.21 PM.png>)
-![Task Board - Filters - Light Theme](<screenshots/Screenshot 2026-04-15 at 1.38.09 PM.png>)
-![Task Detail - Light Theme](<screenshots/Screenshot 2026-04-15 at 1.38.48 PM.png>)
-![Create or Edit Form - Light Theme](<screenshots/Screenshot 2026-04-15 at 1.39.26 PM.png>)
+![Light Theme - Dashboard](<screenshots/Screenshot 2026-04-15 at 1.29.54 PM.png>)
+![Light Theme - Projects Page](<screenshots/Screenshot 2026-04-15 at 1.36.33 PM.png>)
+![Light Theme - Task Board](<screenshots/Screenshot 2026-04-15 at 1.37.21 PM.png>)
+![Light Theme - Task Board Filters](<screenshots/Screenshot 2026-04-15 at 1.38.09 PM.png>)
+![Light Theme - Task Detail](<screenshots/Screenshot 2026-04-15 at 1.38.48 PM.png>)
+![Light Theme - Create/Edit Task Form](<screenshots/Screenshot 2026-04-15 at 1.39.26 PM.png>)
 
 ### Dark Theme
-![Dashboard - Dark Theme](<screenshots/Screenshot 2026-04-15 at 1.36.03 PM.png>)
-![Projects - Dark Theme](<screenshots/Screenshot 2026-04-15 at 1.36.55 PM.png>)
-![Task Board - Dark Theme](<screenshots/Screenshot 2026-04-15 at 1.37.45 PM.png>)
-![Task Board - Kanban - Dark Theme](<screenshots/Screenshot 2026-04-15 at 1.38.26 PM.png>)
-![Task Detail - Dark Theme](<screenshots/Screenshot 2026-04-15 at 1.39.05 PM.png>)
-![Comments Section - Dark Theme](<screenshots/Screenshot 2026-04-15 at 1.39.50 PM.png>)
+![Dark Theme - Dashboard](<screenshots/Screenshot 2026-04-15 at 1.36.03 PM.png>)
+![Dark Theme - Projects Page](<screenshots/Screenshot 2026-04-15 at 1.36.55 PM.png>)
+![Dark Theme - Task Board](<screenshots/Screenshot 2026-04-15 at 1.37.45 PM.png>)
+![Dark Theme - Task Board Kanban View](<screenshots/Screenshot 2026-04-15 at 1.38.26 PM.png>)
+![Dark Theme - Task Detail](<screenshots/Screenshot 2026-04-15 at 1.39.05 PM.png>)
+![Dark Theme - Comments Section](<screenshots/Screenshot 2026-04-15 at 1.39.50 PM.png>)
