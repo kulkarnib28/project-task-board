@@ -146,6 +146,32 @@ project-task-board/
 - .NET SDK `10.x`
 - Node.js + npm
 
+## 5-Minute Reviewer Quick Start
+
+From repository root:
+
+```bash
+# Terminal 1 (Backend)
+dotnet restore backend/backend.csproj
+dotnet run --project backend/backend.csproj
+
+# Terminal 2 (Frontend)
+npm --prefix frontend install
+npm --prefix frontend run dev
+```
+
+Open:
+- Frontend: `http://localhost:5173`
+- Backend API base: `http://localhost:5062/api`
+
+Quick verification URLs:
+- `http://localhost:5062/api/dashboard`
+- `http://localhost:5062/api/projects`
+
+Note:
+- Migrations are auto-applied on startup via `db.Database.MigrateAsync()`.
+- Seed data is inserted on first run if no projects exist.
+
 ### 1) Start Backend
 
 From repository root:
@@ -179,6 +205,33 @@ VITE_API_BASE_URL=http://localhost:5062/api
 
 If not set, frontend defaults to `http://localhost:5062/api`.
 
+## Database and Migrations
+
+Migration folder:
+- `backend/Migrations`
+
+Already included:
+- `InitialCreate` migration
+
+Manual migration commands (if reviewer wants to run explicitly):
+
+```bash
+dotnet ef migrations list --project backend/backend.csproj
+dotnet ef database update --project backend/backend.csproj
+```
+
+Create a new migration (example):
+
+```bash
+dotnet ef migrations add AddExampleChange --project backend/backend.csproj
+dotnet ef database update --project backend/backend.csproj
+```
+
+Database behavior in this project:
+- SQLite file is created automatically (`backend/taskboard.db`) when app starts
+- Existing migrations are applied automatically at startup
+- Seed data is added automatically on first run
+
 ## Build Commands
 
 From repository root:
@@ -187,6 +240,70 @@ From repository root:
 dotnet build backend/backend.csproj
 npm --prefix frontend run build
 ```
+
+## API Usage Examples
+
+Projects:
+
+```bash
+curl http://localhost:5062/api/projects
+curl http://localhost:5062/api/projects/1
+```
+
+Tasks with filtering, sorting, pagination:
+
+```bash
+curl "http://localhost:5062/api/projects/1/tasks?status=InProgress&priority=High&sortBy=dueDate&sortDir=asc&page=1&pageSize=10"
+```
+
+Task detail with comments:
+
+```bash
+curl http://localhost:5062/api/tasks/1
+curl http://localhost:5062/api/tasks/1/comments
+```
+
+Dashboard:
+
+```bash
+curl http://localhost:5062/api/dashboard
+```
+
+Validation error example:
+
+```bash
+curl -X POST http://localhost:5062/api/projects \
+  -H "Content-Type: application/json" \
+  -d "{}"
+```
+
+Expected validation response shape:
+
+```json
+{
+  "message": "Validation failed.",
+  "errors": {
+    "Name": ["The Name field is required."]
+  }
+}
+```
+
+## Requirement Compliance Checklist
+
+| Requirement | Status | Notes |
+|---|---|---|
+| React frontend + ASP.NET Core Web API backend | ✅ | Implemented in `frontend/` and `backend/` |
+| SQLite + EF Core + migrations | ✅ | `backend/Migrations` present, `InitialCreate` included |
+| Seed data on first run | ✅ | Implemented in `backend/Data/SeedData.cs` |
+| Controllers + Services + DTO architecture | ✅ | Controllers call service interfaces, not `DbContext` directly |
+| Global exception middleware | ✅ | `backend/Middleware/ExceptionHandlingMiddleware.cs` |
+| Required status codes | ✅ | `200`, `201`, `400`, `404`, `409`, `500` handled |
+| Task filtering/sorting/pagination | ✅ | `status`, `priority`, `sortBy`, `sortDir`, `page`, `pageSize` |
+| Dashboard API | ✅ | `GET /api/dashboard` implemented |
+| Required frontend views | ✅ | Dashboard, Projects, Task Board, Task Detail, Forms |
+| Hooks + Context + custom hook (`useApi`) | ✅ | Implemented across frontend pages/components |
+| Loading/error handling + confirmation dialogs | ✅ | Implemented in frontend views |
+| Multiple meaningful commits | ✅ | Structured commit history maintained |
 
 ## Notes
 
